@@ -1,6 +1,8 @@
 #include "Core/Core.h"
 
+
 int main()
 {
-	Core::PrintHelloWorld();
+	Core::CreateApplication()->run();
+	return 0;
 }

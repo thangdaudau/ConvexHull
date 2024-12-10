@@ -5,19 +5,24 @@ project "App"
    targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "Source/**.h", "Source/**.cpp" }
+   files { 
+       "Source/**.h", 
+       "Source/**.cpp",
 
-   includedirs
-   {
+       "../Core/vendor/glad/glad.c",
+       "../Core/vendor/imgui/**.cpp",
+   }
+
+   includedirs {
       "Source",
 
 	  -- Include Core
-	  "../Core/Source"
+	  "../Core/Source",
+      "../Core/vendor",
    }
 
-   links
-   {
-      "Core"
+   links {
+       "Core",
    }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")

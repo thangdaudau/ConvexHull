@@ -5,11 +5,29 @@ project "Core"
    targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "Source/**.h", "Source/**.cpp" }
+   files { 
+       "Source/**.h", 
+       "Source/**.cpp",
 
-   includedirs
-   {
-      "Source"
+       "vendor/stb/stb.cpp",
+       --"vendor/glad/glad.c",
+       --"vendor/imgui/**.cpp",
+   }
+
+   pchsource "stb.cpp"
+
+   includedirs {
+      "Source",
+      "vendor",
+   }
+
+   libdirs {
+        "lib"
+   }
+
+   links {
+       "glfw3",
+       "opengl32"
    }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
