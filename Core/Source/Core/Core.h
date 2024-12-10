@@ -30,12 +30,13 @@ namespace Core {
 		double m_lastFrame = 0.0;
 		double m_deltaTime = 0.0;
 		float m_speed = 5.0f;
+		const float m_minSpeed = 0.01f;
+		const float m_maxSpeed = 50.0f;
 		bool m_dragging = false;
 		bool m_dragStart = false;
 		double m_lastDragX = 0.0;
 		double m_lastDragY = 0.0;
 		Ref<VertexArray> m_vertexArray;
-		Ref<VertexArray> m_anotherVertexArray;
 		Ref<OxyzRenderer> m_OxyzRenderer;
 		Ref<Camera<CameraType::thirdPerson>> m_camera;
 		Shader m_pointShader;

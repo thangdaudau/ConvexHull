@@ -15,9 +15,7 @@ namespace Core {
 		m_lineShader("Assets/Shader/line.glsl")
 	{
 		m_vertexArray = createRef<VertexArray>();
-		m_anotherVertexArray = createRef<VertexArray>();
 		m_vertexArray->setIndexBuffer(createRef<IndexBuffer>(nullptr, 0));
-		m_anotherVertexArray->setIndexBuffer(createRef<IndexBuffer>(nullptr, 0));
 		m_OxyzRenderer = createRef<OxyzRenderer>(m_camera);
 		m_OxyzRenderer->setLineWidth(5);
 		m_OxyzRenderer->setPointSize(7);
@@ -84,6 +82,14 @@ namespace Core {
 				{
 					if (m_vRunning)
 						m_paused ^= 1;
+				}
+				if (key == GLFW_KEY_UP && action == GLFW_REPEAT)
+				{
+					m_speed = std::min(m_speed + 0.1f, m_maxSpeed);
+				}
+				if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT)
+				{
+					m_speed = std::max(m_speed - 0.1f, m_minSpeed);
 				}
 			}
 		);
@@ -178,7 +184,7 @@ namespace Core {
 				if (m_deltaTime > 1 / m_speed)
 					m_visualizer.clearVisibleFace();
 				if (m_deltaTime > 2 / m_speed)
-					count = m_visualizer.getFaces().size();
+					count = (int)m_visualizer.getFaces().size();
 				if (m_deltaTime > 3 / m_speed)
 					pointCount = std::min(m_numberOfPoints, pointCount + 1);
 				
