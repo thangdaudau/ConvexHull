@@ -196,6 +196,7 @@ namespace Core {
 				if (m_deltaTime > 3 / m_speed)
 					pointCount = std::min(m_numberOfPoints, pointCount + 1);
 				
+				m_vertexArray->bind();
 				m_vertexArray->setIndexBuffer(createRef<IndexBuffer>(&m_visualizer.getPointOrder()[0], pointCount));
 				m_pointShader.bind();
 				m_pointShader.setUniformMat4f("u_ViewProjection", m_camera->getVP());

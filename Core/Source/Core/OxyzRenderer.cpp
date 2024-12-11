@@ -83,7 +83,7 @@ namespace Core {
         }
         {
             m_arrowShader->bind();
-            float a = axisLen / 100;
+            float a = axisLen * 0.01f;
             float verticies[15] = {
                 -a,     0.0f,       -a,
                 -a,     0.0f,       a,
