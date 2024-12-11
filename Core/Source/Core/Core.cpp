@@ -91,6 +91,14 @@ namespace Core {
 				{
 					m_speed = std::max(m_speed - 0.1f, m_minSpeed);
 				}
+				if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+				{
+					m_speed = std::min(m_speed + 0.1f, m_maxSpeed);
+				}
+				if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+				{
+					m_speed = std::max(m_speed - 0.1f, m_minSpeed);
+				}
 			}
 		);
 	}
