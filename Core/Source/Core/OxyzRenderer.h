@@ -16,7 +16,9 @@ namespace Core {
 
 	private:
 		Ref<VertexArray> m_axis;
+		Ref<VertexArray> m_arrow;
 		Ref<Shader> m_axisShader;
+		Ref<Shader> m_arrowShader;
 		Ref<Camera<CameraType::thirdPerson>> m_camera;
 	};
 
