@@ -74,7 +74,6 @@ namespace Core {
             return cross(b - a, c - a);
         }
 
-        // O(n^2) cause i'm too lazy
         static void initialFace(std::vector<point_t>& p) {
             std::sort(p.begin(), p.end());
             p.erase(std::unique(p.begin(), p.end()), p.end());
@@ -93,38 +92,37 @@ namespace Core {
             }
 
             // Find a face
-            // Just brute force
-            for (int i = 2; i < n; i++) {
-                std::swap(p[i], p[2]);
-                auto v = normalVector(p[0], p[1], p[2]);
-                if (isZero(v)) {
+            auto v01 = p[1] - p[0];
+            auto h = cross(v01, normalVector(p[0], p[1], p[2]));
+            for (int i = 3; i < n; i++) {
+                auto new_h = cross(v01, normalVector(p[0], p[1], p[i]));
+                if (isZero(new_h)) {
                     continue;
                 }
-                if (v.x > 0) {
-                    v = -v;
+                double dir = dot(v01, cross(new_h, h));
+                if (std::abs(dir) <= EPSILON) {
+                    break;
                 }
-                bool ok = true;
-                for (int j = 3; j < n; j++) {
-                    auto d = dot(p[j] - p[0], v);
-                    if (d > EPSILON) {
-                        ok = false;
-                        break;
-                    }
+                if (dir > EPSILON) {
+                    h = new_h;
+                    std::swap(p[i], p[2]);
                 }
-                if (ok) {
+            }
+            auto n012 = normalVector(p[0], p[1], p[2]);
+            for (int i = 3; i < n; i++) {
+                if (dot(p[i] - p[0], n012) < -EPSILON) {
+                    std::swap(p[0], p[1]);
                     break;
                 }
             }
-            if (normalVector(p[0], p[1], p[2]).x > EPSILON) {
-                std::swap(p[1], p[0]);
-            }
-            for (int i = 3; i < n; i++) {
-                if (std::abs(dot(p[i] - p[0], normalVector(p[0], p[1], p[2]))) > EPSILON) {
+            for (int i = 4; i < n; i++) {
+                assert(dot(p[i] - p[0], n012) > -EPSILON);
+                if (std::abs(dot(p[i] - p[0], n012)) > EPSILON) {
                     std::swap(p[i], p[3]);
                     break;
                 }
             }
-            assert("All points are coplanar" && std::abs(dot(p[3] - p[0], normalVector(p[0], p[1], p[2]))) > EPSILON);
+            assert("All points are coplanar" && std::abs(dot(p[3] - p[0], n012)) > EPSILON);
         }
 
         static void initialTetrahedron(std::vector<point_t>& p) {
@@ -145,7 +143,7 @@ namespace Core {
             }
             for (int i = 3; i < n; i++) {
                 if (std::abs(dot(p[i] - p[0], normalVector(p[0], p[1], p[2]))) > EPSILON) {
-                    std::swap(p[i], p[2]);
+                    std::swap(p[i], p[3]);
                     break;
                 }
             }
@@ -168,21 +166,25 @@ namespace Core {
             int n = int(p.size());
 
             std::vector<face_t> faces;
-            std::vector<std::vector<bool>> edges(n, std::vector<bool>(n));
-
+            std::unordered_set<int64_t> edges;
+            auto h = [&](int a, int b) {
+                return a * int64_t(1e9) + b;
+                };
             auto addFace = [&](int a, int b, int c) {
                 faces.emplace_back(a, b, c, cross(p[b] - p[a], p[c] - p[a]));
-                edges[a][b] = edges[b][c] = edges[c][a] = true;
+                edges.insert(h(a, b));
+                edges.insert(h(b, c));
+                edges.insert(h(c, a));
                 };
             addFace(0, 1, 2);
 
             for (int i = 0; i < int(faces.size()); i++) {
                 int x[4] = { faces[i].a, faces[i].b, faces[i].c, faces[i].a };
-                auto& fn = faces[i].n;
+                auto fn = faces[i].n;
                 for (int k = 0; k < 3; k++) {
                     int a = x[k];
                     int b = x[k + 1];
-                    if (!edges[b][a]) {
+                    if (!edges.contains(h(b, a))) {
                         // Tricky part :)
                         auto ab = p[b] - p[a];
                         auto v = cross(ab, cross(ab, p[0] - p[b]));

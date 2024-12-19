@@ -152,7 +152,7 @@ namespace Core {
 		glm::vec3 h = glm::cross(v01, normalVector(face_t(m_ord[0], m_ord[1], m_ord[2])));
 		for (int i = 3; i < n; i++) {
 			glm::vec3 new_h = glm::cross(v01, normalVector(face_t(m_ord[0], m_ord[1], m_ord[i])));
-			if (isZero(new_h)) 
+			if (isZero(new_h))
 				continue;
 			float dir = glm::dot(v01, glm::cross(new_h, h));
 			if (std::abs(dir) <= s_EPS)
