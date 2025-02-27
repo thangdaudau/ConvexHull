@@ -299,7 +299,7 @@ namespace Core {
                         int a = x[k];
                         int b = x[k + 1];
                         auto it = edges.find(h(b, a));
-                        if (it == edges.end()) {
+                        if (it == edges.end()) { // No faces have been deleted before, so this section is meaningless. Fix it one day...
                             edges.erase(h(a, b));
                             continue;
                         }
