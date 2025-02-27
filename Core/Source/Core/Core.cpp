@@ -122,7 +122,6 @@ namespace Core {
 			if (not m_paused)
 			{
 				m_deltaTime += currentFrame - m_lastFrame;
-				// TODO
 				if (m_type == ConvexHullAlgoType::GiftWrapping)
 				{
 					if (m_deltaTime > 1 / m_speed)
